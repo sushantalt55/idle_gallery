@@ -1,50 +1,48 @@
 #page-view {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    /* padding-top: 5px; */
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: black;
+    z-index: 20;
+    /* Leaves the sidebar (see --side-w in style.css) visible on the left */
+    left: var(--side-w);
+    background-color: var(--bg);
+    transition: left 0.35s ease;
 }
 
-.page-view-head {
-    position: fixed;
-    width:100%;
-    color: white
+/* The album top bar (.header) always spans the full width and does not move
+   when the sidebar is toggled. It covers the main header, so it has its own toggle. */
+
+.page-name {
+    /* Album names are stored lowercase; only the display is capitalised */
+    text-transform: capitalize;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.page-view-head .page-name {
+    font-size: 14px;
+    font-weight: 700;
 }
 
 .page-view-body {
-    display: flex;
-    flex-wrap: wrap;
+    padding-top: calc(var(--header-h) + var(--gap));
 }
 
-
-.page-info {
-    padding: 10px;
-    /* height: 300px; */
-    position: fixed;
-    top:0;
-    left:0;
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
+#page-view .nav-btn.prev {
+    left: calc(var(--side-w) + 16px);
+    transition: left 0.35s ease, opacity 0.3s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.12s;
 }
 
-.page-liked{
-    margin-left:20px;
-    margin-right:10px;
+/* With the sidebar hidden the album images take the full width */
+body.sidebar-hidden #page-view {
+    left: 0;
 }
 
-.page-info-head {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+body.sidebar-hidden #page-view .nav-btn.prev {
+    left: 16px;
 }
 
-.page-liked, .image-liked {
-    width: 25px;
-    z-index:10;
+@media (prefers-reduced-motion: reduce) {
+    #page-view,
+    #page-view .nav-btn.prev {
+        transition: none;
+    }
 }

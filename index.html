@@ -2,81 +2,177 @@
 <html>
 
 <head>
-    <title>Gallary</title>
-    <link rel="stylesheet" href="CSS/modal.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>IDLE Gallery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="CSS/style.css">
+    <link rel="stylesheet" href="CSS/modal.css">
     <link rel="stylesheet" href="CSS/page-view.css">
     <link rel="stylesheet" href="CSS/image-view.css">
+    <link rel="stylesheet" href="CSS/settings.css">
+    <script src="JS/settings.js" defer></script>
     <script src="JS/main.js" defer></script>
-    <script src="JS/test.js" defer></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 
 <body>
-    <header class="header">
-        <span class="fa fa-windows fa-lg"></span>
-        <div class="zoom-controls">
-            <i class="fa fa-minus-square-o" style="font-size:24px;" onclick="zoomOut()"></i>
-            <i class="fa fa-plus-square-o" style="font-size:24px;" onclick="zoomIn()"></i>
+    <header class="header main-head">
+        <div class="header-left">
+            <button class="icon-btn sidebar-toggle" title="Toggle sidebar" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
+            <button class="icon-btn" title="Zoom out" onclick="zoomOut()"><i class="fa fa-minus"></i></button>
+            <button class="icon-btn" title="Zoom in" onclick="zoomIn()"><i class="fa fa-plus"></i></button>
+            <button class="icon-btn settings-toggle" title="Settings" onclick="toggleSettings()"><i class="fa fa-cog"></i></button>
+        </div>
+        <span class="brand">IDLE Gallery</span>
+        <div class="header-right">
+            <button class="btn-primary" title="Show a new random set of images" onclick="render()">
+                <i class="fa fa-random"></i><span>Shuffle</span>
+            </button>
         </div>
     </header>
-  
+
     <div class="page">
         <div class="side">
-            <div class="searchbox">
-                <i class="fa fa-search"></i>
-                <input type="text" id="page-search">
+            <div class="search-panel">
+                <div class="searchbox">
+                    <i class="fa fa-search"></i>
+                    <input type="text" id="page-search" placeholder="Search albums" autocomplete="off" spellcheck="false">
+                    <button class="search-clear hidden" title="Clear search" onclick="clearSearch()"><i class="fa fa-times"></i></button>
+                </div>
+                <div class="search-count"></div>
             </div>
             <div class="nav-pages">
+            </div>
+        </div>
+
+        <div class="settings-panel hidden">
+            <div class="settings-head">
+                <span>Settings</span>
+                <button class="icon-btn close" title="Close settings" onclick="closeSettings()"><i class="fa fa-times"></i></button>
+            </div>
+            <div class="settings-body">
+                <div class="setting-group">
+                    <h3>Accent colour</h3>
+                    <div class="swatches"></div>
+                    <label class="setting-row">
+                        <span>Custom colour</span>
+                        <input type="color" id="set-accent" onchange="setSetting('accent', this.value)">
+                    </label>
+                </div>
+
+                <div class="setting-group">
+                    <h3>Layout</h3>
+                    <label class="setting-row">
+                        <span>Image gap</span>
+                        <input type="range" id="set-gap" min="0" max="16" step="1" oninput="setSetting('gap', +this.value)">
+                        <span class="setting-value" id="gap-value"></span>
+                    </label>
+                    <label class="setting-row">
+                        <span>Corner radius</span>
+                        <input type="range" id="set-radius" min="0" max="20" step="1" oninput="setSetting('imgRadius', +this.value)">
+                        <span class="setting-value" id="radius-value"></span>
+                    </label>
+                    <label class="setting-row">
+                        <span>Images per batch</span>
+                        <select id="set-count" onchange="setSetting('gridCount', +this.value)">
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="200">200</option>
+                            <option value="400">400</option>
+                            <option value="800">800</option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="setting-group">
+                    <h3>Behaviour</h3>
+                    <label class="setting-row">
+                        <span>Infinite scroll</span>
+                        <input type="checkbox" class="switch" id="set-infinite" onchange="setSetting('infinite', this.checked)">
+                    </label>
+                    <label class="setting-row">
+                        <span>Hide arrows when idle</span>
+                        <input type="checkbox" class="switch" id="set-autohide" onchange="setSetting('autoHideNav', this.checked)">
+                    </label>
+                    <label class="setting-row">
+                        <span>Animations</span>
+                        <input type="checkbox" class="switch" id="set-anim" onchange="setSetting('animations', this.checked)">
+                    </label>
+                </div>
+
+                <div class="setting-group">
+                    <h3>Likes</h3>
+                    <p class="setting-note" id="likes-summary"></p>
+                    <button class="btn-danger" onclick="clearLikes()">Clear all likes</button>
+                </div>
+
+                <div class="setting-group">
+                    <button class="btn-ghost" onclick="resetSettings()">Reset to defaults</button>
+                </div>
             </div>
         </div>
         <div class="row" id="imagerow">
         </div>
     </div>
 
+    <div class="grid-end hidden">
+        That's 2000 images. Press Shuffle for a new set.
+    </div>
 
-    <footer>
-        <button class="btn" onclick="render()">R</button>
-    </footer>
 
     <div id="page-view" class="modal">
         <div class="header page-view-head">
-            <div>
-                <i class="fa fa-minus-square-o" style="font-size:24px;" onclick="pageZoomOut()"></i>
-                <i class="fa fa-plus-square-o" style="font-size:24px;" onclick="pageZoomIn()"></i>
+            <div class="header-left">
+                <button class="icon-btn sidebar-toggle" title="Toggle sidebar" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
+                <button class="icon-btn" title="Zoom out" onclick="pageZoomOut()"><i class="fa fa-minus"></i></button>
+                <button class="icon-btn" title="Zoom in" onclick="pageZoomIn()"><i class="fa fa-plus"></i></button>
+                <button class="icon-btn settings-toggle" title="Settings" onclick="toggleSettings()"><i class="fa fa-cog"></i></button>
             </div>
             <span class="page-name"></span>
-            <div>
-                <img class="page-liked" src="icons/like.png" alt="" onclick="pageLike()">
+            <div class="header-right">
+                <button class="icon-btn like-btn page-liked" title="Like album" onclick="pageLike()"><i class="fa fa-heart-o"></i></button>
+                <button class="icon-btn close" title="Close album" onclick="closePageView()"><i class="fa fa-times"></i></button>
             </div>
-            <span class="close cursor" onclick="closePageView()">&times;</span>
         </div>
-        <div class="page-view-body"></div>
-        <div class="page-view-nav">
-            <a class="prev" onclick="prevPage()">&#10094;</a>
-            <a class="next" onclick="nextPage()">&#10095;</a>
-            <a class="spin" onclick="spinPage()">&#10095;&#10095;</a>
+        <div class="row page-view-body"></div>
+        <div class="view-nav">
+            <button class="nav-btn prev" title="Previous album" onclick="prevPage()"><i class="fa fa-chevron-left"></i></button>
+            <button class="nav-btn next" title="Next album" onclick="nextPage()"><i class="fa fa-chevron-right"></i></button>
+            <button class="nav-btn spin" title="Random album" onclick="spinPage()"><i class="fa fa-random"></i></button>
         </div>
     </div>
 
 
     <div id="image-view" class="modal">
-        <div class="image-view-head header">
-            <span class="page-name" onclick="showCurrentPage()"></span>
+        <div class="header image-view-head">
+            <div class="header-left">
+                <button class="back-btn" title="Back to album" onclick="showCurrentPage()">
+                    <i class="fa fa-arrow-left"></i><span class="page-name"></span>
+                </button>
+            </div>
             <span class="image-sl"></span>
-            <img class="image-liked" src="icons/like.png" alt="" onclick="imageLike()">
-            <div class="image-zoom-levels">1 2 3</div>
-            <span class="close cursor" onclick="closeImageView()">&times;</span>
+            <div class="header-right">
+                <div class="zoom-levels" title="Zoom">
+                    <button data-zoom="1" onclick="setImageZoom(1)">Fit</button>
+                    <button data-zoom="2" onclick="setImageZoom(2)">2×</button>
+                    <button data-zoom="3" onclick="setImageZoom(3)">3×</button>
+                </div>
+                <button class="icon-btn like-btn image-liked" title="Like image" onclick="imageLike()"><i class="fa fa-heart-o"></i></button>
+                <button class="icon-btn close" title="Close image" onclick="closeImageView()"><i class="fa fa-times"></i></button>
+            </div>
         </div>
         <div class="image-view-body">
             <div class="image-container">
             </div>
         </div>
-        <div class="image-view-nav">
-            <a class="prev" onclick="prevImage()">&#10094;</a>
-            <a class="next" onclick="nextImage()">&#10095;</a>
-            <a class="spin" onclick="spinImage()">&#10095;&#10095;</a>
+        <div class="view-nav">
+            <button class="nav-btn prev" title="Previous image" onclick="prevImage()"><i class="fa fa-chevron-left"></i></button>
+            <button class="nav-btn next" title="Next image" onclick="nextImage()"><i class="fa fa-chevron-right"></i></button>
+            <button class="nav-btn spin" title="Random image" onclick="spinImage()"><i class="fa fa-random"></i></button>
         </div>
     </div>
 
@@ -84,4 +180,3 @@
 </body>
 
 </html>
-
