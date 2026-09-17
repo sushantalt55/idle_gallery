@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Gallary</title>
+    <link rel="stylesheet" href="CSS/modal.css">
+    <link rel="stylesheet" href="CSS/style.css">
+    <link rel="stylesheet" href="CSS/page-view.css">
+    <link rel="stylesheet" href="CSS/image-view.css">
+    <script src="JS/main.js" defer></script>
+    <script src="JS/test.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+
+<body>
+    <header class="header">
+        <span class="fa fa-windows fa-lg"></span>
+        <div class="zoom-controls">
+            <i class="fa fa-minus-square-o" style="font-size:24px;" onclick="zoomOut()"></i>
+            <i class="fa fa-plus-square-o" style="font-size:24px;" onclick="zoomIn()"></i>
+        </div>
+    </header>
+  
+    <div class="page">
+        <div class="side">
+            <div class="searchbox">
+                <i class="fa fa-search"></i>
+                <input type="text" id="page-search">
+            </div>
+            <div class="nav-pages">
+            </div>
+        </div>
+        <div class="row" id="imagerow">
+        </div>
+    </div>
+
+
+    <footer>
+        <button class="btn" onclick="render()">R</button>
+    </footer>
+
+    <div id="page-view" class="modal">
+        <div class="header page-view-head">
+            <div>
+                <i class="fa fa-minus-square-o" style="font-size:24px;" onclick="pageZoomOut()"></i>
+                <i class="fa fa-plus-square-o" style="font-size:24px;" onclick="pageZoomIn()"></i>
+            </div>
+            <span class="page-name"></span>
+            <div>
+                <img class="page-liked" src="icons/like.png" alt="" onclick="pageLike()">
+            </div>
+            <span class="close cursor" onclick="closePageView()">&times;</span>
+        </div>
+        <div class="page-view-body"></div>
+        <div class="page-view-nav">
+            <a class="prev" onclick="prevPage()">&#10094;</a>
+            <a class="next" onclick="nextPage()">&#10095;</a>
+            <a class="spin" onclick="spinPage()">&#10095;&#10095;</a>
+        </div>
+    </div>
+
+
+    <div id="image-view" class="modal">
+        <div class="image-view-head header">
+            <span class="page-name" onclick="showCurrentPage()"></span>
+            <span class="image-sl"></span>
+            <img class="image-liked" src="icons/like.png" alt="" onclick="imageLike()">
+            <div class="image-zoom-levels">1 2 3</div>
+            <span class="close cursor" onclick="closeImageView()">&times;</span>
+        </div>
+        <div class="image-view-body">
+            <div class="image-container">
+            </div>
+        </div>
+        <div class="image-view-nav">
+            <a class="prev" onclick="prevImage()">&#10094;</a>
+            <a class="next" onclick="nextImage()">&#10095;</a>
+            <a class="spin" onclick="spinImage()">&#10095;&#10095;</a>
+        </div>
+    </div>
+
+
+</body>
+
+</html>
+
